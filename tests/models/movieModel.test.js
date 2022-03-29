@@ -1,10 +1,19 @@
 const { expect } = require('chai');
+const sinon = require('sinon');
 
-const MoviesModel = {
-  create: () => {},
-};
+const connection = require('../../models/connection');
+const MoviesModel = require('../../models/movieModel');
 
 describe('Insere um novo filme no Banco de Dados', () => {
+  before(async () => {
+    const executeReturn = [{ insertId: 1 }];
+    sinon.stub(connection, 'execute').resolves(executeReturn);
+  });
+
+  after(async () => {
+    connection.execute.restore();
+  });
+
   const newMovie = {
     title: 'Example Movie',
     directedBy: 'Jane Dow',
