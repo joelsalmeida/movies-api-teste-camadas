@@ -1,8 +1,8 @@
 const { expect } = require('chai');
+const sinon = require('sinon');
 
-const MoviesService = {
-  create: () => {},
-};
+const MoviesModel = require('../../models/movieModel');
+const MoviesService = require('../../services/movieService');
 
 describe('Insere um novo filme no Banco de Dados', () => {
   describe('Quando o payload informado não é válido', () => {
@@ -22,6 +22,16 @@ describe('Insere um novo filme no Banco de Dados', () => {
   });
 
   describe('Quando inserido com sucesso', () => {
+    before(() => {
+      const ID_RETURNED = 1;
+
+      sinon.stub(MoviesModel, 'create').resolves({ id: ID_RETURNED });
+    });
+
+    after(() => {
+      MoviesModel.create.restore();
+    });
+
     const payloadMovie = {
       title: 'Interstellar',
       directedBy: 'Christopher Nolan',
